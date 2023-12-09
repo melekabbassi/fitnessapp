@@ -81,6 +81,30 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: const Text('Login'),
           ),
+          const SizedBox(height: 14),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await supabase.auth.signInWithOAuth(Provider.google,
+                    redirectTo:
+                        "io.supabase.flutterquickstart://login-callback");
+              } on AuthException catch (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(error.message),
+                      backgroundColor: Theme.of(context).colorScheme.error),
+                );
+              } catch (error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: const Text(
+                          'An error has occurred, please try again.'),
+                      backgroundColor: Theme.of(context).colorScheme.error),
+                );
+              }
+            },
+            child: const Text('Login With Google'),
+          ),
         ],
       ),
     );
