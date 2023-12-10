@@ -1,6 +1,6 @@
-import 'package:fitnessapp/pages/account_page.dart';
-import 'package:fitnessapp/pages/login_page.dart';
-import 'package:fitnessapp/pages/splash_page.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:fitnessapp/pages/OnBoardingScreen/onboarding_page.dart';
+import 'package:fitnessapp/pages/SplashScreen/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -17,6 +17,12 @@ Future<void> main() async {
 
 // Get a reference your Supabase client
 final supabase = Supabase.instance.client;
+final ThemeData myTheme = ThemeData(
+  colorScheme: const ColorScheme.dark(
+      background: Color(0xFF192126),
+      primary: Color(0xFF192126),
+      secondary: Color(0xFFBBF246)),
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,18 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashPage(),
-        '/login': (context) => const LoginPage(),
-        '/account': (context) => const AccountPage(),
-      },
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: myTheme,
+        home: AnimatedSplashScreen(
+          splash: const SplashPage(),
+          nextScreen: const OnBoardingPage(),
+        ));
   }
 }
