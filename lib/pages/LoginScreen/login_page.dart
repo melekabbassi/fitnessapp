@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fitnessapp/main.dart';
 import 'package:fitnessapp/pages/AccountScreen/account_page.dart';
+import 'package:fitnessapp/pages/HomeScreen/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,8 +25,8 @@ class _LoginPageState extends State<LoginPage> {
       final session = event.session;
       if (session != null) {
         // Navigator.of(context).pushReplacementNamed('/account');
-        Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => new AccountPage()));
+        Navigator.push(
+            context, new MaterialPageRoute(builder: (context) => new Home()));
       }
     });
   }
