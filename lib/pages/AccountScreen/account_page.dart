@@ -23,9 +23,10 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Account')),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
               'Welcome',
@@ -42,24 +43,29 @@ class _AccountPageState extends State<AccountPage> {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 48),
-            FloatingActionButton(
-              backgroundColor: Colors.lightGreenAccent,
-              onPressed: () async {
-                try {
-                  await supabase.auth.signOut();
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new LoginPage()));
-                } catch (error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(error.toString()),
-                    ),
-                  );
-                }
-              },
-              child: logoutIcon,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton(
+                  backgroundColor: Colors.lightGreenAccent,
+                  onPressed: () async {
+                    try {
+                      await supabase.auth.signOut();
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => new LoginPage()));
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(error.toString()),
+                        ),
+                      );
+                    }
+                  },
+                  child: logoutIcon,
+                ),
+              ],
             )
           ],
         ),
