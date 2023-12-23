@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:fitnessapp/main.dart';
+import 'package:fitnessapp/pages/AccountScreen/account_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,7 +23,9 @@ class _LoginPageState extends State<LoginPage> {
     _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
       final session = event.session;
       if (session != null) {
-        Navigator.of(context).pushReplacementNamed('/account');
+        // Navigator.of(context).pushReplacementNamed('/account');
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (context) => new AccountPage()));
       }
     });
   }
@@ -33,79 +37,69 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  final Widget googleIcon = SvgPicture.asset(
+    "assets/icons/google.svg",
+    height: 48,
+    width: 48,
+  );
+
+  final Widget octopusIcon = SvgPicture.asset(
+    "assets/icons/octopus.svg",
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: ListView(
-        padding: const EdgeInsets.all(14),
-        children: [
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-            ),
-          ),
-          const SizedBox(height: 14),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                final email = _emailController.text.trim();
-                await supabase.auth.signInWithOtp(
-                  email: email,
-                  emailRedirectTo:
-                      'io.supabase.flutterquickstart://login-callback',
-                );
-
-                if (!mounted) {
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            octopusIcon,
+            const SizedBox(height: 48),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.lightGreenAccent),
+                fixedSize: MaterialStateProperty.all<Size>(const Size(250, 50)),
+              ),
+              onPressed: () async {
+                try {
+                  await supabase.auth.signInWithOAuth(Provider.google,
+                      redirectTo:
+                          "io.supabase.flutterquickstart://login-callback");
+                  // Navigator.push(
+                  //     context,
+                  //     new MaterialPageRoute(
+                  //         builder: (context) => new AccountPage()));
+                } on AuthException catch (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Check your inbox'),
-                    ),
+                    SnackBar(
+                        content: Text(error.message),
+                        backgroundColor: Theme.of(context).colorScheme.error),
+                  );
+                } catch (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: const Text(
+                            'An error has occurred, please try again.'),
+                        backgroundColor: Theme.of(context).colorScheme.error),
                   );
                 }
-              } on AuthException catch (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(error.message),
-                      backgroundColor: Theme.of(context).colorScheme.error),
-                );
-              } catch (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: const Text(
-                          'An error has occurred, please try again.'),
-                      backgroundColor: Theme.of(context).colorScheme.error),
-                );
-              }
-            },
-            child: const Text('Login'),
-          ),
-          const SizedBox(height: 14),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await supabase.auth.signInWithOAuth(Provider.google,
-                    redirectTo:
-                        "io.supabase.flutterquickstart://login-callback");
-              } on AuthException catch (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(error.message),
-                      backgroundColor: Theme.of(context).colorScheme.error),
-                );
-              } catch (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: const Text(
-                          'An error has occurred, please try again.'),
-                      backgroundColor: Theme.of(context).colorScheme.error),
-                );
-              }
-            },
-            child: const Text('Login With Google'),
-          ),
-        ],
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  googleIcon,
+                  const SizedBox(width: 10),
+                  Text(
+                    'Sign in with Google',
+                    style: TextStyle(color: Colors.blueGrey.shade900),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
