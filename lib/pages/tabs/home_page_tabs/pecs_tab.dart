@@ -11,8 +11,8 @@ class PecsTab extends StatefulWidget {
 
 class _PecsTabState extends State<PecsTab> {
   final _pecsExercicesStream = Supabase.instance.client
-      .from('exercices')
-      .stream(primaryKey: ['id']).eq('category', 'pecs');
+      .from('pecs_exercices')
+      .stream(primaryKey: ['id']).order('id', ascending: true);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,7 @@ class _PecsTabState extends State<PecsTab> {
           }
           final exercices = snapshot.data!;
           return ListView.builder(
+            physics: const BouncingScrollPhysics(),
             itemCount: exercices.length,
             itemBuilder: (context, index) {
               return ListTile(
@@ -34,23 +35,27 @@ class _PecsTabState extends State<PecsTab> {
                     const Spacer(),
                     IconButton(
                       onPressed: () async {
-                        // change favorite to true if false and vice versa
-                        final favorite = exercices[index]['favorite'];
-                        await Supabase.instance.client
-                            .from('exercices')
-                            .update({'favorite': !favorite}).eq(
-                                'id', exercices[index]['id']);
+                        // when the user clicks on the favorite button create a new row in the pecs_favorites table
+                        // with the exercice id and the user id
+                        final response = await Supabase.instance.client
+                            .from('fav_pecs_exercices')
+                            .insert([
+                          {
+                            'user_id':
+                                Supabase.instance.client.auth.currentUser?.id,
+                            'pecs_exercice_id': exercices[index]['id'],
+                            'name': exercices[index]['name'],
+                            'picture': exercices[index]['picture'],
+                          }
+                        ]);
+                        if (response.error == null) {
+                          const SnackBar(
+                            content: Text('Exercice added to favorites'),
+                          );
+                        }
                       },
-                      // if favorite is true, show filled star, else show empty star
-                      icon: exercices[index]['favorite']
-                          ? const Icon(
-                              Icons.favorite,
-                              color: Colors.lightGreenAccent,
-                            )
-                          : const Icon(
-                              Icons.favorite_border,
-                              color: Colors.lightGreenAccent,
-                            ),
+                      icon: const Icon(Icons.favorite_border,
+                          color: Colors.lightGreenAccent),
                     ),
                   ],
                 ),
@@ -60,13 +65,5 @@ class _PecsTabState extends State<PecsTab> {
         },
       ),
     );
-    // return Scaffold(
-    //   body: ListView.builder(
-    //     itemCount: 10,
-    //     itemBuilder: (context, index) {
-    //       return const ExerciceCard();
-    //     },
-    //   ),
-    // );
   }
 }
