@@ -28,35 +28,46 @@ class _ShouldersTabState extends State<ShouldersTab> {
             itemCount: exercices.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Row(
+                title: Column(
                   children: [
-                    Text(exercices[index]['name']),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () async {
-                        // when the user clicks on the favorite button create a new row in the shoulders_favorites table
-                        // with the exercice id and the user id
-                        final response = await Supabase.instance.client
-                            .from('fav_shoulders_exercices')
-                            .insert([
-                          {
-                            'user_id':
-                                Supabase.instance.client.auth.currentUser?.id,
-                            'shoulders_exercice_id': exercices[index]['id'],
-                            'name': exercices[index]['name'],
-                            'picture': exercices[index]['picture'],
-                          }
-                        ]);
-                        if (response.error == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Exercice added to favorites'),
-                            ),
-                          );
-                        }
-                      },
-                      icon: const Icon(Icons.favorite_border,
-                          color: Colors.lightGreenAccent),
+                    Image.network(
+                      exercices[index]['picture'],
+                      height: 200,
+                      width: 400,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(exercices[index]['name']),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () async {
+                            // when the user clicks on the favorite button create a new row in the shoulders_favorites table
+                            // with the exercice id and the user id
+                            final response = await Supabase.instance.client
+                                .from('fav_shoulders_exercices')
+                                .insert([
+                              {
+                                'user_id': Supabase
+                                    .instance.client.auth.currentUser?.id,
+                                'shoulders_exercice_id': exercices[index]['id'],
+                                'name': exercices[index]['name'],
+                                'picture': exercices[index]['picture'],
+                              }
+                            ]);
+                            if (response.error == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Exercice added to favorites'),
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.favorite_border,
+                              color: Colors.lightGreenAccent),
+                        ),
+                      ],
                     ),
                   ],
                 ),
