@@ -1,3 +1,4 @@
+import 'package:fitnessapp/components/add_exercice_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,11 +31,17 @@ class _PecsTabState extends State<PecsTab> {
               return ListTile(
                 title: Column(
                   children: [
-                    Image.network(
-                      exercices[index]['picture'],
-                      height: 200,
-                      width: 400,
-                    ),
+                    // display the exercice picture if there is one else display a placeholder
+                    exercices[index]['picture'] == null
+                        ? const Placeholder(
+                            fallbackHeight: 200,
+                            fallbackWidth: 400,
+                          )
+                        : Image.network(
+                            exercices[index]['picture'],
+                            height: 200,
+                            width: 400,
+                          ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,6 +80,24 @@ class _PecsTabState extends State<PecsTab> {
             },
           );
         },
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 160),
+        child: FloatingActionButton(
+          backgroundColor: Colors.lightGreenAccent,
+          onPressed: () async {
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return const AddExerciceModal(
+                  tableName: 'pecs_exercices',
+                  category: 'pecs',
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

@@ -34,11 +34,16 @@ class _FavPecsTabState extends State<FavPecsTab> {
                     return ListTile(
                       title: Column(
                         children: [
-                          Image.network(
-                            exercices[index]['picture'],
-                            height: 200,
-                            width: 400,
-                          ),
+                          exercices[index]['picture'] == null
+                              ? const Placeholder(
+                                  fallbackHeight: 200,
+                                  fallbackWidth: 400,
+                                )
+                              : Image.network(
+                                  exercices[index]['picture'],
+                                  height: 200,
+                                  width: 400,
+                                ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
