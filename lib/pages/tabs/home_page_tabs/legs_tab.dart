@@ -1,3 +1,4 @@
+import 'package:fitnessapp/components/add_exercice_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,11 +31,16 @@ class _LegsTabState extends State<LegsTab> {
               return ListTile(
                 title: Column(
                   children: [
-                    Image.network(
-                      exercices[index]['picture'],
-                      height: 200,
-                      width: 400,
-                    ),
+                    exercices[index]['picture'] == null
+                        ? const Placeholder(
+                            fallbackHeight: 200,
+                            fallbackWidth: 400,
+                          )
+                        : Image.network(
+                            exercices[index]['picture'],
+                            height: 200,
+                            width: 400,
+                          ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,6 +81,24 @@ class _LegsTabState extends State<LegsTab> {
             },
           );
         },
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 160),
+        child: FloatingActionButton(
+          backgroundColor: Colors.lightGreenAccent,
+          onPressed: () async {
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return const AddExerciceModal(
+                  tableName: 'legs_exercices',
+                  category: 'legs',
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

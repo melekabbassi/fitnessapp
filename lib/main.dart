@@ -1,6 +1,4 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:fitnessapp/pages/AccountScreen/account_page.dart';
-import 'package:fitnessapp/pages/HomeScreen/home_page.dart';
 import 'package:fitnessapp/pages/LoginScreen/login_page.dart';
 import 'package:fitnessapp/pages/SplashScreen/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -42,13 +40,6 @@ class MyApp extends StatelessWidget {
         splashIconSize: toDouble(200),
         splashTransition: SplashTransition.fadeTransition,
       ),
-      // initialRoute: '/',
-      // routes: {
-      //   '/': (context) => const SplashPage(),
-      //   '/login_page': (context) => const LoginPage(),
-      //   '/account': (context) => const AccountPage(),
-      //   '/home_page': (context) => const HomePage(),
-      // },
     );
   }
 }
